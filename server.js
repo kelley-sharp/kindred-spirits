@@ -37,7 +37,7 @@ function gradeQuiz(responseArr) {
   return { animal: animalName };
 }
 
-app.use("cors");
+app.use(cors());
 
 app.use(express.json());
 

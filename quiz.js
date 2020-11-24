@@ -130,11 +130,20 @@ function submitQuiz(event) {
   });
 
   const reqBody = { responses };
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://pacific-falls-35444.herokuapp.com/quiz", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      alert(xhr.response);
+    }
+  };
+  xhr.send(JSON.stringify(reqBody));
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  const quizForm = document.querySelector("#quiz-content");
-  quizForm.addEventListener("submit", submitQuiz);
+  document.querySelector("form").addEventListener("submit", submitQuiz);
+  const quizContent = document.querySelector("#quiz-content");
   console.log("DOM fully loaded and parsed");
   for (const question of questions) {
     const questionContainer = document.createElement("div");
@@ -170,7 +179,7 @@ window.addEventListener("DOMContentLoaded", () => {
       optionsContainer.appendChild(optionContainer);
     }
     questionContainer.appendChild(optionsContainer);
-    quizForm.appendChild(questionContainer);
+    quizContent.appendChild(questionContainer);
   }
   // submit button
   const submitButtonContainer = document.createElement("div");
@@ -180,5 +189,5 @@ window.addEventListener("DOMContentLoaded", () => {
   submitButton.classList.add("align-self-center");
   submitButton.innerHTML = "See your animal";
   submitButtonContainer.appendChild(submitButton);
-  quizForm.appendChild(submitButtonContainer);
+  quizContent.appendChild(submitButtonContainer);
 });
