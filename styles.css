@@ -1,0 +1,48 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.carousel-wrapper {
+  width: 600px;
+}
+
+.carousel-item {
+  max-height: 450px;
+}
+
+.carousel-item img {
+  max-height: 450px;
+}
+
+.media img {
+  max-height: 200px;
+}
+
+.media:nth-child(2n + 1) {
+  order: 2;
+}
+
+.store_item {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.store_item img {
+  max-height: 300px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.citation {
+  right: 1rem;
+  bottom: 1rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: black;
+  font-size: 0.7rem;
+}
