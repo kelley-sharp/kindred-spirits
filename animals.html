@@ -13,7 +13,7 @@
     <title>Animals</title>
   </head>
   <body>
-    <div class="container bg-white">
+    <div class="container bg-white d-flex align-items-start">
       <!-- Nav bar -->
       <nav class="navbar navbar-expand-lg navbar-light mb-2 mb-lg-5">
         <a class="navbar-brand" href="./index.html">KindredSpirits</a>
@@ -44,18 +44,17 @@
             <li class="nav-item">
               <a class="nav-link" href="./adopt.html">Adopt</a>
             </li>
-            <li class="nav-item">
-              <a
-                class="btn btn-primary"
-                href="./animal_info.pdf"
-                download
-                tabindex="-1"
-                >Download PDF</a
-              >
-            </li>
           </ul>
         </div>
       </nav>
+
+      <a
+        class="btn btn-primary ml-auto mt-2 d-none d-lg-block"
+        href="./animal_info.pdf"
+        download
+        tabindex="-1"
+        >Download PDF Version</a
+      >
     </div>
     <!-- Media -->
     <div class="row no-gutters bg-light">
@@ -284,5 +283,4 @@
     integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
     crossorigin="anonymous"
   ></script>
-  <script src="main.js"></script>
 </html>
