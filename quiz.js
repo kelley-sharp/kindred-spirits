@@ -106,43 +106,15 @@ const questions = [
   },
 ];
 
-function submitQuiz(event) {
-  // prevent page from refreshing
-  event.preventDefault();
+const animalNameMap = {
+  addax: "Addax",
+  panda: "Red Panda",
+  baboon: "Gelada Baboon",
+  bear: "Polar Bear",
+  bat: "Flying Fox Bat",
+};
 
-  // post the chosen weights for each question, e.g.
-  /**
-   {
-     "responses": [
-        { addax: 2, panda: 3, baboon: 1, bear: 5, bat: 4 },
-        { addax: 5, panda: 5, baboon: 4, bear: 1, bat: 0 },
-        { addax: 1, panda: 0, baboon: 4, bear: 0, bat: 5 }
-        { addax: 4, panda: 5, baboon: 0, bear: 0, bat: 3 }
-     ]
-   }
-   */
-  const responses = questions.map((question) => {
-    const questionOptionId = document.querySelector(
-      `input[name="${question.id}"]:checked`
-    ).value;
-    return question.options.find((option) => option.id === questionOptionId)
-      .weights;
-  });
-
-  const reqBody = { responses };
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://pacific-falls-35444.herokuapp.com/quiz", true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      alert(xhr.response);
-    }
-  };
-  xhr.send(JSON.stringify(reqBody));
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  document.querySelector("form").addEventListener("submit", submitQuiz);
+function generateQuizContent() {
   const quizContent = document.querySelector("#quiz-content");
   console.log("DOM fully loaded and parsed");
   for (const question of questions) {
@@ -158,6 +130,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const optionsContainer = document.createElement("div");
     optionsContainer.classList.add("mt-2");
 
+    // generate radio buttons
     for (const option of question.options) {
       const optionContainer = document.createElement("div");
       optionContainer.classList.add("form-check");
@@ -190,4 +163,67 @@ window.addEventListener("DOMContentLoaded", () => {
   submitButton.innerHTML = "See your animal";
   submitButtonContainer.appendChild(submitButton);
   quizContent.appendChild(submitButtonContainer);
+}
+
+function submitQuiz(event) {
+  // prevent page from refreshing
+  event.preventDefault();
+
+  // post the chosen weights for each question, e.g.
+  /**
+   {
+     "responses": [
+        { addax: 2, panda: 3, baboon: 1, bear: 5, bat: 4 },
+        { addax: 5, panda: 5, baboon: 4, bear: 1, bat: 0 },
+        { addax: 1, panda: 0, baboon: 4, bear: 0, bat: 5 }
+        { addax: 4, panda: 5, baboon: 0, bear: 0, bat: 3 }
+     ]
+   }
+   */
+  const responses = questions.map((question) => {
+    const questionOptionId = document.querySelector(
+      `input[name="${question.id}"]:checked`
+    ).value;
+    return question.options.find((option) => option.id === questionOptionId)
+      .weights;
+  });
+
+  // Show a loading spinner temporarily
+  const quizContent = document.querySelector("#quiz-content");
+  quizContent.innerHTML = null;
+  const loadingSpinner = document.createElement("div");
+  loadingSpinner.classList.add("spinner-border", "text-info");
+  loadingSpinner.role = "status";
+  const accessibilitySpan = document.createElement("span");
+  accessibilitySpan.classList.add("sr-only");
+  accessibilitySpan.innerHTML = "Loading...";
+  loadingSpinner.appendChild(accessibilitySpan);
+  quizContent.appendChild(loadingSpinner);
+
+  // prepare and send POST request to server.js running on heroku server
+  const reqBody = { responses };
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://pacific-falls-35444.herokuapp.com/quiz", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      // reset quiz content
+      quizContent.innerHTML = null;
+      generateQuizContent();
+
+      // show result animal in a bootstrap modal
+      const parsedResponse = JSON.parse(xhr.response);
+      const resultAnimal = parsedResponse.animal;
+      const resultAnimalName = animalNameMap[resultAnimal];
+      const resultBody = document.querySelector("#quiz-result-body");
+      resultBody.innerHTML = `Wow, you scored a ${resultAnimalName}!`;
+      $("#quiz-result-modal").modal();
+    }
+  };
+  xhr.send(JSON.stringify(reqBody));
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  document.querySelector("form").addEventListener("submit", submitQuiz);
+  generateQuizContent();
 });
