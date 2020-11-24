@@ -25,6 +25,11 @@ body {
   order: 2;
 }
 
+.store_wrapper {
+  overflow: auto;
+  height: 600px;
+}
+
 .store_item {
   width: 300px;
   display: flex;
