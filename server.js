@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
+const cors = require("cors");
 
 /**
  * This function sums the weights provided and returns the name of the animal with the highest weight
@@ -35,6 +36,8 @@ function gradeQuiz(responseArr) {
 
   return { animal: animalName };
 }
+
+app.use("cors");
 
 app.use(express.json());
 
